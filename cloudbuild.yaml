@@ -1,0 +1,10 @@
+steps:
+# build docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/gdg-cloud-run/hello-api:$COMMIT_SHA', '.']
+# push docker image to container registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/gdg-cloud-run/hello-api:$COMMIT_SHA']
+# deploy app on cloud run
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run' , 'deploy', 'hello-api', '--platform', 'managed', '--region', 'australia-southeast1', '--image', 'gcr.io/gdg-cloud-run/hello-api:$COMMIT_SHA', '--service-account', 'hello-api', '--no-allow-unauthenticated']
